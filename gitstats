@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -p "What is the name of the root direvtory you want the git stats for?" ROOT_DIRECTORY
+read -p "What is the name of the root direvtory you want the git stats for? " ROOT_DIRECTORY
 
 cd "../Projects/$ROOT_DIRECTORY" || {
     echo "Directory $ROOT_DIRECTORY does not exist."
