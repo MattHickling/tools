@@ -28,7 +28,12 @@ if [ ! -d ".git" ]; then
     exit 1
 fi
 
-git status
-git branch
-git log --oneline
+LOG_DIR="$HOME/Library/Logs/git-repo-status"
+mkdir -p "$LOG_DIR"
+
+{
+    git status
+    git branch
+    git log --oneline
+} > "$LOG_DIR/${ROOT_DIRECTORY}.log"
 
