@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROJECTS_DIR="../Projects"
-
+EMAIL="m.hickling@hotmail.co.uk"
 while true; do
     read -p "Enter project directory name (press Enter to list options): " ROOT_DIRECTORY
 
@@ -31,9 +31,12 @@ fi
 LOG_DIR="$HOME/Library/Logs/git-repo-status"
 mkdir -p "$LOG_DIR"
 
+LOG_FILE="$LOG_DIR/${ROOT_DIRECTORY}.log"
+
 {
     git status
     git branch
     git log --oneline
-} > "$LOG_DIR/${ROOT_DIRECTORY}.log"
+} > "$LOG_FILE"
 
+open -a Mail "$LOG_FILE"
