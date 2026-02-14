@@ -1,42 +1,33 @@
 #!/bin/bash
+PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 
-PROJECTS_DIR="../Projects"
-EMAIL="m.hickling@hotmail.co.uk"
-while true; do
-    read -p "Enter project directory name (press Enter to list options): " ROOT_DIRECTORY
-
-    if [ -z "$ROOT_DIRECTORY" ]; then
-        echo "Available directories:"
-        ls -la "$PROJECTS_DIR"
-        continue
-    fi
-
-    TARGET="$PROJECTS_DIR/$ROOT_DIRECTORY"
-
-    if [ ! -d "$TARGET" ]; then
-        echo "Directory not found."
-        ls -la "$PROJECTS_DIR"
-        continue
-    fi
-
-    cd "$TARGET" || exit 1
-    break
-done
-
-if [ ! -d ".git" ]; then
-    echo "This directory is not a git repository."
-    exit 1
-fi
-
+PROJECTS_DIR="$HOME/Projects"
 LOG_DIR="$HOME/Library/Logs/git-repo-status"
+
 mkdir -p "$LOG_DIR"
 
-LOG_FILE="$LOG_DIR/${ROOT_DIRECTORY}.log"
+for TARGET in "$PROJECTS_DIR"/*; do
+    # Skip if not a directory
+    [ -d "$TARGET" ] || continue
 
-{
-    git status
-    git branch
-    git log --oneline
-} > "$LOG_FILE"
+    # Check if it is a git repo
+    if [ ! -d "$TARGET/.git" ]; then
+        continue
+    fi
 
-open -a Mail "$LOG_FILE"
+    PROJECT_NAME=$(basename "$TARGET")
+    LOG_FILE="$LOG_DIR/${PROJECT_NAME}.log"
+
+    dt=$(date '+%d/%m/%Y %H:%M:%S')
+
+    {
+        echo "===== $dt ====="
+        cd "$TARGET" || exit 1
+        git status
+        git branch
+        git log --oneline
+        echo
+    } >> "$LOG_FILE"
+
+done
+
