@@ -7,16 +7,21 @@ LOG_DIR="$HOME/Library/Logs/git-repo-status"
 mkdir -p "$LOG_DIR"
 
 for TARGET in "$PROJECTS_DIR"/*; do
-    # Skip if not a directory
     [ -d "$TARGET" ] || continue
 
-    # Check if it is a git repo
     if [ ! -d "$TARGET/.git" ]; then
         continue
     fi
 
     PROJECT_NAME=$(basename "$TARGET")
     LOG_FILE="$LOG_DIR/${PROJECT_NAME}.log"
+
+    # Only 10 logs
+    for i in 9 8 7 6 5 4 3 2 1; do
+        [ -f "$LOG_FILE.$i" ] && mv "$LOG_FILE.$i" "$LOG_FILE.$((i+1))"
+    done
+
+    [ -f "$LOG_FILE" ] && mv "$LOG_FILE" "$LOG_FILE.1"
 
     dt=$(date '+%d/%m/%Y %H:%M:%S')
 
@@ -27,7 +32,7 @@ for TARGET in "$PROJECTS_DIR"/*; do
         git branch
         git log --oneline
         echo
-    } >> "$LOG_FILE"
+    } > "$LOG_FILE"
 
 done
 
