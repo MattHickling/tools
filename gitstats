@@ -35,5 +35,7 @@ for TARGET in "$PROJECTS_DIR"/*; do
         echo
     } > "$LOG_FILE"
 
+echo "success""
+
 done
 
