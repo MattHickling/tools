@@ -1,9 +1,14 @@
 #!/bin/bash
 PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 
-LOCKFILE="/tmp/gitstats.lock"
-exec 9>"$LOCKFILE"
-flock -n 9 || exit 0
+LOCKDIR="/tmp/gitstats.lockdir"
+
+if ! mkdir "$LOCKDIR" 2>/dev/null; then
+    echo "Another instance is running"
+    exit 0
+fi
+
+trap 'rm -rf "$LOCKDIR"' EXIT
 
 PROJECTS_DIR="$HOME/Projects"
 if [ ! -d "$PROJECTS_DIR" ]; then
