@@ -4,7 +4,7 @@ PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 PROJECTS_DIR="$HOME/Projects"
 if [ ! -d $PROJECTS_DIR ]; then
     echo "No Projects Directory"
-    eixt 1
+    exit 1
 fi
 
 LOG_DIR="$HOME/Library/Logs/git-repo-status"
@@ -14,11 +14,7 @@ mkdir -p "$LOG_DIR"
 for TARGET in "$PROJECTS_DIR"/*; do
     [ -d "$TARGET" ] || continue
 
-    if [ ! -d "$TARGET/.git" ]; then
-        continue
-    fi
-
-    sleep 5
+    git -C "$TARGET" rev-parse --is-inside-work-tree >/dev/null 2>&1 || continue
  
     PROJECT_NAME=$(basename "$TARGET")
     LOG_FILE="$LOG_DIR/${PROJECT_NAME}.log"
