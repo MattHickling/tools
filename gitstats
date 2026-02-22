@@ -2,7 +2,7 @@
 PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 
 PROJECTS_DIR="$HOME/Projects"
-if [ ! -d $PROJECTS_DIR ]; then
+if [ ! -d "$PROJECTS_DIR" ]; then
     echo "No Projects Directory"
     exit 1
 fi
@@ -30,11 +30,10 @@ for TARGET in "$PROJECTS_DIR"/*; do
 
     {
         echo "===== $dt ====="
-        cd "$TARGET" || exit 1
-        git fetch
-	git status
-        git branch
-        git log --oneline
+        git -C "$TARGET" fetch
+        git -C "$TARGET" status
+        git -C "$TARGET" branch
+        git -C "$TARGET" log --oneline
         echo
     } > "$LOG_FILE"
 
