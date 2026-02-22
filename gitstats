@@ -34,7 +34,7 @@ for TARGET in "$PROJECTS_DIR"/*; do
 
     {
         echo "===== $dt ====="
-        git -C "$TARGET" fetch
+        git -C "$TARGET" fetch 2>&1
         git -C "$TARGET" status
         git -C "$TARGET" branch
         git -C "$TARGET" log --oneline
