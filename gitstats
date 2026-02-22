@@ -2,6 +2,11 @@
 PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 
 PROJECTS_DIR="$HOME/Projects"
+if [ ! -d $PROJECTS_DIR ]; then
+    echo "No Projects Directory"
+    eixt 1
+fi
+
 LOG_DIR="$HOME/Library/Logs/git-repo-status"
 
 mkdir -p "$LOG_DIR"
@@ -13,6 +18,8 @@ for TARGET in "$PROJECTS_DIR"/*; do
         continue
     fi
 
+    sleep 5
+ 
     PROJECT_NAME=$(basename "$TARGET")
     LOG_FILE="$LOG_DIR/${PROJECT_NAME}.log"
 
@@ -34,8 +41,6 @@ for TARGET in "$PROJECTS_DIR"/*; do
         git log --oneline
         echo
     } > "$LOG_FILE"
-
-echo "success""
 
 done
 
