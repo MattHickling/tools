@@ -1,6 +1,10 @@
 #!/bin/bash
 PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 
+LOCKFILE="/tmp/gitstats.lock"
+exec 9>"$LOCKFILE"
+flock -n 9 || exit 0
+
 PROJECTS_DIR="$HOME/Projects"
 if [ ! -d "$PROJECTS_DIR" ]; then
     echo "No Projects Directory"
