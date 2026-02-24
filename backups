@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BACKUP_DIR="$HOME/backups"
+BACKUP_DIR="$HOME/tools/backups"
 DATE=$(date +%Y%m%d)
 
 mkdir -p "$BACKUP_DIR"

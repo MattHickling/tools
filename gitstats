@@ -16,7 +16,7 @@ if [ ! -d "$PROJECTS_DIR" ]; then
     exit 1
 fi
 
-LOG_DIR="$HOME/Library/Logs/git-repo-status"
+LOG_DIR="$HOME/tools/logs"
 
 mkdir -p "$LOG_DIR"
 
