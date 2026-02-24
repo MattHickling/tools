@@ -1,0 +1,61 @@
+# Project Management Tools
+
+This repository contains utility scripts for managing and maintaining your development projects, including Git status logging and automated project backups.
+
+---
+
+## Scripts Overview
+
+1. **Git Repo Status Logger** – Logs the status of all Git repositories in `~/Projects`.
+2. **Project Backup Script** – Creates compressed backups of all projects in `~/Projects` and manages old backups.
+
+---
+
+## 1. Git Repo Status Logger
+
+**File:** `git-repo-status.sh`
+
+This script iterates through all project directories under `~/Projects` and generates logs of the Git repository status for each project.
+
+**Features:**
+
+- Checks if the `Projects` directory exists.
+- Creates a log directory at `~/Library/Logs/git-repo-status`.
+- Iterates over each subdirectory in `~/Projects` and checks if it is a Git repository.
+- Performs:
+  - `git fetch`
+  - `git status`
+  - `git branch`
+  - `git log --oneline`
+- Maintains up to 10 historical log files per project, rotating older logs automatically.
+- Each log entry is timestamped.
+
+**Usage:**
+
+```bash
+chmod +x git-repo-status.sh
+./git-repo-status.sh
+
+
+## 2. Project Backup Script
+
+**File:** `backup-projects.sh`
+
+This script creates compressed backups of all projects in `~/Projects`.
+
+**Features:**
+
+- Creates a backup directory at `~/backups`.
+- Backs up each project directory into a `.tar.gz` file named `<project_name>_YYYYMMDD.tar.gz`.
+- Excludes common large directories such as:
+  - `vendor`
+  - `node_modules`
+  - `.git`
+- Automatically deletes backups older than 14 days.
+- Prints a summary of the number of projects backed up.
+
+**Usage:**
+
+```bash
+chmod +x backup-projects.sh
+./backup-projects.sh
