@@ -35,7 +35,7 @@ This script iterates through all project directories under `~/Projects` and gene
 ```bash
 chmod +x git-repo-status.sh
 ./git-repo-status.sh
-
+```
 ## 2. Project Backup Script
 
 **File:** `backup-projects.sh`
