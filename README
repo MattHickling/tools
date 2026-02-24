@@ -32,10 +32,6 @@ This script iterates through all project directories under `~/Projects` and gene
 
 **Usage:**
 
-```bash
-chmod +x git-repo-status.sh
-./git-repo-status.sh
-```
 ## 2. Project Backup Script
 
 **File:** `backup-projects.sh`
@@ -54,7 +50,3 @@ This script creates compressed backups of all projects in `~/Projects`.
 - Prints a summary of the number of projects backed up.
 
 **Usage:**
-
-```bash
-chmod +x backup-projects.sh
-./backup-projects.sh
