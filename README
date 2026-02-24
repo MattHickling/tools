@@ -13,14 +13,14 @@ This repository contains utility scripts for managing and maintaining your devel
 
 ## 1. Git Repo Status Logger
 
-**File:** `git-repo-status.sh`
+**File:** `gitstats`
 
 This script iterates through all project directories under `~/Projects` and generates logs of the Git repository status for each project.
 
 **Features:**
 
 - Checks if the `Projects` directory exists.
-- Creates a log directory at `~/Library/Logs/git-repo-status`.
+- Creates a log directory at `~/tools/logs`.
 - Iterates over each subdirectory in `~/Projects` and checks if it is a Git repository.
 - Performs:
   - `git fetch`
@@ -34,13 +34,13 @@ This script iterates through all project directories under `~/Projects` and gene
 
 ## 2. Project Backup Script
 
-**File:** `backup-projects.sh`
+**File:** `backups`
 
 This script creates compressed backups of all projects in `~/Projects`.
 
 **Features:**
 
-- Creates a backup directory at `~/backups`.
+- Creates a backup directory at `~/tools/backups`.
 - Backs up each project directory into a `.tar.gz` file named `<project_name>_YYYYMMDD.tar.gz`.
 - Excludes common large directories such as:
   - `vendor`
