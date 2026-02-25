@@ -1,25 +1,31 @@
 #!/bin/bash
 
-BACKUP_DIR="$HOME/tools/backups"
+BACKUP_DIR="$HOME/tools/proj_backups"
+PROJECTS_DIR="$HOME/Projects"
 DATE=$(date +%Y%m%d)
 
 mkdir -p "$BACKUP_DIR"
 
-for project in ~/Projects/*/; do
+count=0
+for project in "$PROJECTS_DIR"/*/; do
     PROJECT_NAME=$(basename "$project")
-    
     echo "Backing up $PROJECT_NAME..."
-  
-    # Dont include vendor, node mods etc. Add any others here. 
+
+    PROJECT_PATH="${project%/}"
+
     tar -czf "$BACKUP_DIR/${PROJECT_NAME}_${DATE}.tar.gz" \
         --exclude="vendor" \
         --exclude="node_modules" \
         --exclude=".git" \
-        "$project"
+        "$PROJECT_PATH"
+
+    if [[ $? -eq 0 ]]; then
+        ((count++))
+    else
+        echo "Failed to back up $PROJECT_NAME"
+    fi
 done
 
-# Delete older than 14 days
 find "$BACKUP_DIR" -name "*.tar.gz" -mtime +14 -delete
 
-echo "Backup complete! Backed up $(ls ~/projects | wc -l) projects"
-echo "ADD THE README!!!!!!!!!!"
+echo "Backup complete! Backed up $count projects"
