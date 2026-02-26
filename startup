@@ -1,0 +1,61 @@
+#!/bin/bash
+# Morning development environment check
+
+echo "Development Environment Status"
+echo "Date: $(date '+%A, %B %d, %Y at %H:%M')"
+echo ""
+
+# Disk space
+echo "Disk Space:"
+df -h / | awk 'NR==2 {print "  " $5 " used (" $3 " of " $2 ")"}'
+
+DISK=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+if [ $DISK -gt 80 ]; then
+    echo "WARNING: Disk usage over 80%"
+fi
+echo ""
+
+# Git status
+echo "Git Status:"
+UNCOMMITTED=0
+for dir in ~/projects/*/; do
+    if [ -d "$dir/.git" ]; then
+        cd "$dir"
+        if [[ -n $(git status -s) ]]; then
+            echo "$(basename $dir): uncommitted changes"
+            ((UNCOMMITTED++))
+        fi
+    fi
+done
+
+if [ $UNCOMMITTED -eq 0 ]; then
+    echo "All projects clean"
+else
+    echo "  Total projects with changes: $UNCOMMITTED"
+fi
+echo ""
+
+# Large files in Downloads
+echo "Large Downloads:"
+LARGE=$(find ~/Downloads -size +100M 2>/dev/null | wc -l)
+if [ $LARGE -gt 0 ]; then
+    echo "$LARGE files over 100MB"
+    find ~/Downloads -size +100M -exec ls -lh {} \; 2>/dev/null | awk '{print "     " $9 " (" $5 ")"}'
+else
+    echo "No large files"
+fi
+echo ""
+
+# Recent backup
+echo "Backup Status:"
+LATEST_BACKUP=$(ls -t ~/backups/*.tar.gz 2>/dev/null | head -1)
+if [ -n "$LATEST_BACKUP" ]; then
+    BACKUP_DATE=$(date -r "$LATEST_BACKUP" "+%Y-%m-%d %H:%M")
+    echo "Last backup: $BACKUP_DATE"
+else
+    echo "No backups found"
+fi
+echo ""
+
+echo "=================================="
+echo "Ready to go!"
