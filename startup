@@ -2,6 +2,13 @@
 
 EMAIL_TO="m.hickling@hotmail.co.uk"
 
+PROJECTS_DIR="$HOME/Projects"
+DOWNLOADS_DIR="$HOME/Downloads"
+BACKUPS_DIR="$HOME/tools/backups"
+LOGS_DIR="$HOME/tools/logs"
+
+mkdir -p "$LOGS_DIR"
+
 {
 echo "Subject: Daily Dev Report"
 echo "To: $EMAIL_TO"
@@ -24,7 +31,7 @@ echo ""
 # Git status
 echo "Git Status:"
 UNCOMMITTED=0
-for dir in ~/Projects/*/; do
+for dir in "$PROJECTS_DIR"/*/; do
     if [ -d "$dir/.git" ]; then
         cd "$dir" || continue
         if [[ -n $(git status -s) ]]; then
@@ -43,10 +50,10 @@ echo ""
 
 # Large downloads
 echo "Large Downloads:"
-LARGE=$(find ~/Downloads -size +100M 2>/dev/null | wc -l)
+LARGE=$(find "$DOWNLOADS_DIR" -size +100M 2>/dev/null | wc -l)
 if [ "$LARGE" -gt 0 ]; then
     echo "$LARGE files over 100MB"
-    find ~/Downloads -size +100M -exec ls -lh {} \; 2>/dev/null | awk '{print "  " $9 " (" $5 ")"}'
+    find "$DOWNLOADS_DIR" -size +100M -exec ls -lh {} \; 2>/dev/null | awk '{print "  " $9 " (" $5 ")"}'
 else
     echo "No large files"
 fi
@@ -54,7 +61,7 @@ echo ""
 
 # Backup status
 echo "Backup Status:"
-LATEST_BACKUP=$(ls -t ~/tools/backups/*.tar.gz 2>/dev/null | head -1)
+LATEST_BACKUP=$(ls -t "$BACKUPS_DIR"/*.tar.gz 2>/dev/null | head -1)
 if [ -n "$LATEST_BACKUP" ]; then
     date -r "$LATEST_BACKUP" "+Last backup: %Y-%m-%d %H:%M"
 else
@@ -64,4 +71,4 @@ echo ""
 
 echo "===== End of Report ====="
 
-} | sendmail -t
+} | msmtp "$EMAIL_TO"
