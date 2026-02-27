@@ -32,6 +32,12 @@ This script iterates through all project directories under `~/Projects` and gene
 
 **Usage:**
 
+# Make the script executable
+chmod +x ~/tools/gitstats
+
+# Run manually
+~/tools/gitstats
+
 ## 2. Project Backup Script
 
 **File:** `backups`
@@ -50,3 +56,33 @@ This script creates compressed backups of all projects in `~/Projects`.
 - Prints a summary of the number of projects backed up.
 
 **Usage:**
+
+# Make the script executable
+chmod +x ~/tools/backups
+
+# Run manually
+~/tools/backups
+
+## 3. Startup Script
+
+**File:** `startup`
+
+The startup script provides a **daily system and project status report**, including disk usage, Git repository health, recent backups, and large downloads. It can also **send this report via email**.
+
+### Features
+
+- Checks disk usage on the root filesystem and warns if usage exceeds 75%.
+- Iterates through all projects in `~/Projects` and reports Git repositories with uncommitted changes.
+- Scans the `~/Downloads` folder for files larger than 100 MB.
+- Reports the date and time of the most recent project backup from `~/tools/backups`.
+- Sends the report via email using `sendmail` or an SMTP client like `msmtp`.
+- Uses a configurable recipient email address stored in the script for flexibility.
+
+### Usage
+
+# Make the script executable
+chmod +x ~/tools/startup
+
+# Run manually
+~/tools/startup.sh
+
