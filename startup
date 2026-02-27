@@ -1,60 +1,67 @@
 #!/bin/bash
-# Morning development environment check
 
-echo "Development Environment Status"
-echo "Date: $(date '+%A, %B %d, %Y at %H:%M')"
+EMAIL_TO="m.hickling@hotmail.co.uk"
+
+{
+echo "Subject: Daily Dev Report"
+echo "To: $EMAIL_TO"
+echo "Content-Type: text/plain"
 echo ""
 
-# Disk space
-echo "Disk Space:"
-df -h / | awk 'NR==2 {print "  " $5 " used (" $3 " of " $2 ")"}'
+echo "===== Daily Dev Report ====="
+echo ""
 
+# Disk usage
 DISK=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
-if [ $DISK -gt 75 ]; then
-    echo "WARNING: Disk usage over 80%"
+echo "Disk Usage:"
+if [ "$DISK" -gt 75 ]; then
+    echo "WARNING: Disk usage high at $DISK%"
+else
+    echo "OK: $DISK% used"
 fi
 echo ""
 
 # Git status
 echo "Git Status:"
 UNCOMMITTED=0
-for dir in ~/projects/*/; do
+for dir in ~/Projects/*/; do
     if [ -d "$dir/.git" ]; then
-        cd "$dir"
+        cd "$dir" || continue
         if [[ -n $(git status -s) ]]; then
-            echo "$(basename $dir): uncommitted changes"
+            echo "$(basename "$dir"): uncommitted changes"
             ((UNCOMMITTED++))
         fi
     fi
 done
 
-if [ $UNCOMMITTED -eq 0 ]; then
+if [ "$UNCOMMITTED" -eq 0 ]; then
     echo "All projects clean"
 else
-    echo "  Total projects with changes: $UNCOMMITTED"
+    echo "Total projects with changes: $UNCOMMITTED"
 fi
 echo ""
 
-# Large files in Downloads
+# Large downloads
 echo "Large Downloads:"
 LARGE=$(find ~/Downloads -size +100M 2>/dev/null | wc -l)
-if [ $LARGE -gt 0 ]; then
+if [ "$LARGE" -gt 0 ]; then
     echo "$LARGE files over 100MB"
-    find ~/Downloads -size +100M -exec ls -lh {} \; 2>/dev/null | awk '{print "     " $9 " (" $5 ")"}'
+    find ~/Downloads -size +100M -exec ls -lh {} \; 2>/dev/null | awk '{print "  " $9 " (" $5 ")"}'
 else
     echo "No large files"
 fi
 echo ""
 
-# Recent backup
+# Backup status
 echo "Backup Status:"
-LATEST_BACKUP=$(ls -t ~/backups/*.tar.gz 2>/dev/null | head -1)
+LATEST_BACKUP=$(ls -t ~/tools/backups/*.tar.gz 2>/dev/null | head -1)
 if [ -n "$LATEST_BACKUP" ]; then
-    BACKUP_DATE=$(date -r "$LATEST_BACKUP" "+%Y-%m-%d %H:%M")
-    echo "Last backup: $BACKUP_DATE"
+    date -r "$LATEST_BACKUP" "+Last backup: %Y-%m-%d %H:%M"
 else
     echo "No backups found"
 fi
 echo ""
 
-echo "Ready to go!"
+echo "===== End of Report ====="
+
+} | sendmail -t
