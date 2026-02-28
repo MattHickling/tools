@@ -71,4 +71,5 @@ echo ""
 
 echo "===== End of Report ====="
 
-} | msmtp "$EMAIL_TO"
+}
+# | msmtp "$EMAIL_TO"
