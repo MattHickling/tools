@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 EMAIL_TO="m.hickling@hotmail.co.uk"
 
 PROJECTS_DIR="$HOME/Projects"
