@@ -84,5 +84,33 @@ The startup script provides a **daily system and project status report**, includ
 chmod +x ~/tools/startup
 
 # Run manually
-~/tools/startup.sh
+~/tools/startup
+
+## 3. Stale Branch Script
+
+**File:** `stale_branch`
+
+The stale branch script scans all Git repositories in `~/Projects` and reports branches that have not been updated within a defined time threshold (default: 30 days). It sends a summary report via email.
+
+### Features
+
+- Iterates through every Git repository in `~/Projects`.
+- Identifies local branches whose last commit is older than a configurable number of days.
+- Calculates branch age based on the last commit timestamp.
+- Groups stale branches by project for clear reporting.
+- Outputs branch name and age in days.
+- Sends a formatted summary report via SMTP (e.g., `msmtp`).
+- Allows configuration of:
+  - Email recipient
+  - Project directory path
+  - Stale threshold in days
+- Suitable for automation via cron for weekly or daily monitoring.
+
+### Usage
+
+# Make the script executable
+chmod +x ~/tools/stale_branch
+
+# Run manually
+~/tools/stale_branch
 
