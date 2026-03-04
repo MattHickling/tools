@@ -1,0 +1,48 @@
+#!/bin/bash
+
+EMAIL_TO="m.hickling@hotmail.co.uk"
+PROJECTS_DIR="$HOME/Projects"
+DAYS=30
+
+{
+echo "Subject: Stale Git Branch Report"
+echo "To: $EMAIL_TO"
+echo "Content-Type: text/plain"
+echo ""
+
+echo "===== Stale Branch Report ====="
+echo "Threshold: $DAYS days"
+echo ""
+
+FOUND=0
+
+for dir in "$PROJECTS_DIR"/*/; do
+    if [ -d "$dir/.git" ]; then
+        cd "$dir" || continue
+        PROJECT_NAME=$(basename "$dir")
+
+        STALE=$(git for-each-ref \
+            --format='%(committerdate:unix) %(refname:short)' \
+            refs/heads | while read ts branch; do
+                AGE=$(( ( $(date +%s) - ts ) / 86400 ))
+                if [ "$AGE" -gt "$DAYS" ]; then
+                    echo "$branch ($AGE days old)"
+                fi
+            done)
+
+        if [ -n "$STALE" ]; then
+            echo "$PROJECT_NAME:"
+            echo "$STALE"
+            echo ""
+            FOUND=1
+        fi
+    fi
+done
+
+if [ "$FOUND" -eq 0 ]; then
+    echo "No stale branches found."
+fi
+
+echo "===== End of Report ====="
+
+} | msmtp "$EMAIL_TO"
