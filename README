@@ -8,7 +8,7 @@ This repository contains utility scripts for managing and maintaining your devel
 
 1. **Git Repo Status Logger** – Logs the status of all Git repositories in `~/Projects`.  
 2. **Project Backup Script** – Creates compressed backups of all projects in `~/Projects` and manages old backups.
-
+3. **Stale Branch Script** – Notifies of any git repo that has not been updated in 30 days that is in `~/Projects`.
 ---
 
 ## 1. Git Repo Status Logger
